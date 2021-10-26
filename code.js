@@ -1,0 +1,11 @@
+let num1=2;
+let num2=4;
+console.log("Before Swap");
+console.log("NUM 1: "+num1);
+console.log("NUM 2: "+num2);
+num1+=num2;
+num2=num1-num2;
+num1=num1-num2;
+console.log("After Swap");
+console.log("NUM 1: "+num1);
+console.log("NUM 2: "+num2);
