@@ -84,7 +84,7 @@
 
 // let container=document.querySelector('header.container');
 // console.log(container);
-// let h1=document.querySelector('header h1');
+// let h1=document.querySel   ector('header h1');
 // console.log(h1);
 // container.insertBefore(newDiv, h1);
 // let container2=document.querySelector('ul.items');
@@ -92,6 +92,8 @@
 // let h2=document.querySelector('#myitem1');
 // console.log(h2);
 // container2.insertBefore(newDiv2,h2);
+
+
 
 
 
@@ -134,6 +136,14 @@ function addItem(e){
 
   // Append li to list
   itemList.appendChild(li);
+  
+  let taskList=new Array();
+  taskList=JSON.parse(localStorage.getItem('newItem'))?JSON.parse(localStorage.getItem('newItem')):[];
+  taskList.push({
+    "TASK":newItem
+  });
+  localStorage.setItem('newItem',JSON.stringify(taskList));
+  console.log(localStorage);
 }
 
 // Remove item
