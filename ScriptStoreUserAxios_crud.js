@@ -1,5 +1,5 @@
 var form = document.getElementById('myForm');
-var UserList = document.getElementById('users');
+var UserList = document.getElementById('listOfUsers');
 form.addEventListener('submit',addItem);
 // Delete event
 UserList.addEventListener('click', removeItem);
@@ -13,56 +13,51 @@ function addItem(e){
             newName,
             newEmail,
         };
-    axios.post("https://crudcrud.com/api/95cdf2e008cb4fd5b4c6c3ec562459cb/UserDat",obj)
+    axios.post("https://crudcrud.com/api/7669c8f2beef47998699d6be72e22757/UserDat",obj)
     .then(response => {
         showDetails(response.data);
     })
     .catch(error => console.error(`Something went wrong: ${error.message}`));
     }
         
-function removeItem(e){
-    if(e.target.classList.contains('delete')){
-      if(confirm('Are You Sure?')){
-        var li = e.target.parentElement;
-        console.log(li);
-        UserList.removeChild(li);
-        //localStorage.removeItem(e.newEmail);
-      }
-    }
-  }
+function removeItem(userId){
+   const parentNode=document.getElementById('listOfUsers');
+   const childToBeDelete=document.getElementById(userId);
+   if(childToBeDelete){
+       parentNode.removeChild(childToBeDelete);
+   }
+}
 
-function showDetails(response){
-    console.log(response);
-    var li = document.createElement('li');
-        // Create del button element
-        var deleteBtn = document.createElement('button');
 
-        // Add classes to del button
-        deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+function showDetails(user){
+    document.getElementById('name').value='';
+    document.getElementById('email').value='';
 
-        // Append text node
-        deleteBtn.appendChild(document.createTextNode('X'));
-
-        // Append button to li
-        //li.appendChild(deleteBtn);
-        
-   
-        li.className = 'list-group-item';
-        li.appendChild(document.createTextNode(response.newName+" "+response.newEmail));
-        li.appendChild(deleteBtn);
-        UserList.appendChild(li);
-
+    const parentNode=document.getElementById('listOfUsers');
+    const childHTML = `<li id="${user._id}"> ${user.newName} ---- ${user.newEmail}
+                        <button onclick=delUser('${user._id}')>DELETE</button>
+                        <button onclick=editUser('${user._id}','${user.newName}','${user.newEmail}')>EDIT</button>
+                        </li>`;
+                        parentNode.innerHTML=parentNode.innerHTML+childHTML;
 }
 
 document.addEventListener("DOMContentLoaded",()=> {
-    axios.get("https://crudcrud.com/api/95cdf2e008cb4fd5b4c6c3ec562459cb/UserDat")
-    .then(response=>{
+    axios.get("https://crudcrud.com/api/7669c8f2beef47998699d6be72e22757/UserDat")
+    .then((response)=>{
         for(var i=0; i<response.data.length; i++){
             showDetails(response.data[i]);
         }
     })
-    .catch(err=>console.error(err));
+    .catch((err)=>console.error(err.message));
 });
+
+function delUser(userId){
+    axios.delete(`https://crudcrud.com/api/7669c8f2beef47998699d6be72e22757/UserDat/${userId}`)
+    .then(response=>{
+        removeItem(userId);
+    })
+    .catch(err=>console.error(err));    
+}
 
 
       
