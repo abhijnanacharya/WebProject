@@ -13,7 +13,7 @@ function addItem(e){
             newName,
             newEmail,
         };
-    axios.post("https://crudcrud.com/api/7669c8f2beef47998699d6be72e22757/UserDat",obj)
+    axios.post("https://crudcrud.com/api/ca7a442c2c9b4f83b9689ddabfbcc6ff/UserDat",obj)
     .then(response => {
         showDetails(response.data);
     })
@@ -42,7 +42,7 @@ function showDetails(user){
 }
 
 document.addEventListener("DOMContentLoaded",()=> {
-    axios.get("https://crudcrud.com/api/7669c8f2beef47998699d6be72e22757/UserDat")
+    axios.get("https://crudcrud.com/api/ca7a442c2c9b4f83b9689ddabfbcc6ff/UserDat")
     .then((response)=>{
         for(var i=0; i<response.data.length; i++){
             showDetails(response.data[i]);
@@ -52,11 +52,19 @@ document.addEventListener("DOMContentLoaded",()=> {
 });
 
 function delUser(userId){
-    axios.delete(`https://crudcrud.com/api/7669c8f2beef47998699d6be72e22757/UserDat/${userId}`)
+    axios.delete(`https://crudcrud.com/api/ca7a442c2c9b4f83b9689ddabfbcc6ff/UserDat/${userId}`)
     .then(response=>{
         removeItem(userId);
     })
     .catch(err=>console.error(err));    
+}
+
+function editUser(userId,name,email){
+    document.getElementById('name').value=name;
+    document.getElementById('email').value=email;
+    delUser(userId);
+  
+      
 }
 
 
