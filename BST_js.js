@@ -49,6 +49,20 @@ class Node{
         else
             return true;
     }
+
+    getRootNode()
+    {
+        return this.root;
+    }
+    preorder(node)
+    {
+        if(node !== null)
+        {
+         console.log(node.data);
+         this.preorder(node.left);
+         this.preorder(node.right);
+        }
+    }
  };
  const BST = new BinarySearchTree();
  BST.insert(1);
@@ -57,3 +71,5 @@ class Node{
 
  const val=BST.search(BST,3);
  console.log(val);
+ var root = BST.getRootNode();
+ BST.preorder(root);
