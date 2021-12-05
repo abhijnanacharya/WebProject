@@ -1,51 +1,40 @@
-const fs = require('fs');
+const express= require('express');
+const router=express.Router();
+const fs=require('fs');
 
-const requestHandler = (req, res) => {
-  const url = req.url;
-  const method = req.method;
-  if (url === '/') {
-    res.write('<html>');
-    res.write('<head><title>Enter Message</title></head>');
-    res.write(
-      '<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>'
-    );
-    res.write('</html>');
-    return res.end();
-  }
-  
-  if (url === '/message' && method === 'POST') {
-    const body = [];
-    req.on('data', chunk => {
-      console.log(chunk);
-      body.push(chunk);
+router.get("/login",(req,res,next)=>{
+    res.send(`<form onsubmit="window.localStorage.setItem('username', document.getElementById('username').value)"
+     action="/Room" method ="POST"><input id='username' type="text" name="title">
+        <button type="submit">Enter Room</button></form>`);
+});
+
+router.use("/Room",(req,res, next)=>{
+    res.send(`<div id="room"></div>
+    <form action="/Room_save" method="POST" id="chatBox">  
+    <input id='chatBox' type="text" placeholder="Enter your text here...." name=chatBox> <button type="submit"> Send</button>
+    </form>`);
+    //next();
+});
+
+router.post("/Room_save",(req, res,next)=>{
+    let body=[];
+    console.log(req.body);
+    req.on('data', (chunk)=>{
+        body.push(chunk);
+        console.log(chunk);
     });
-    return req.on('end', () => {
-      const parsedBody = Buffer.concat(body).toString();
-      const message = parsedBody.split('=')[1];
-      fs.writeFile('message.txt', message, err => {
-        res.statusCode = 302;
-        res.setHeader('Location', '/');
-        return res.end();
-      });
+    req.on('end',()=>{
+        const parsedBody=Buffer.concat(body).toString();
+        const message=parsedBody.split('=')[1];
+        //if (typeof window !== 'undefined') {
+            //console.log(localStorage.getItem("username"));
+        //}
+        
+
+        fs.appendFile('./messages.txt',`: ${message} \n`,(err)=>{
+            return res.end();
+        });
+        res.redirect("/Room")
     });
-  }
-  res.setHeader('Content-Type', 'text/html');
-  res.write('<html>');
-  res.write('<head><title>My First Page</title><head>');
-  res.write('<body><h1>Hello from my Node.js Server!</h1></body>');
-  res.write('</html>');
-  res.end();
-};
-
-// module.exports = requestHandler;
-
-// module.exports = {
-//     handler: requestHandler,
-//     someText: 'Some Text'
-// };
-
-// module.exports.handler = requestHandler;
-// module.exports.someText = 'Some Text';
-
-exports.handler = requestHandler;
-exports.someText = 'Some Text';
+});
+module.exports=router;

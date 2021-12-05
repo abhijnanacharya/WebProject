@@ -1,9 +1,14 @@
-const http = require('http');
+const express = require('express');
+const bodyParser=require('body-parser');
 
-const routes = require('./routes');
+const app= express();
 
-console.log(routes.someText);
 
-const server = http.createServer(routes.handler);
+const routes=require('./routes/routes.js');
+app.use(routes);
 
-server.listen(3000);
+
+
+
+
+app.listen(3000);
